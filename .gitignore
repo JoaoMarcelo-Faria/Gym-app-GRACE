@@ -1,0 +1,48 @@
+# --- Streamlit ---
+# NUNCA envie suas credenciais ou senhas para o GitHub
+.streamlit/secrets.toml
+
+# --- Ambientes Virtuais (Virtual Environments) ---
+.venv/
+venv/
+env/
+ENV/
+
+# --- Arquivos do Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# --- Arquivos do Sistema Operacional ---
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# --- IDEs (Opcional) ---
+.vscode/
+.idea/
+
+# --- Arquivos de Dados (Opcional - Ative se tiver dados pesados) ---
+# *.csv
+# *.json
+# *.xlsx
+
+requirements.txt
+docs/
