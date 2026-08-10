@@ -1,0 +1,27 @@
+Descrição do App
+
+O app atual tem como principal funcionalidade fazer o rastreio do rendimento do usuário 
+nos exercícios presentes no treino dele. O rendimento é dado pelas repetições realizadas com certo peso
+ou pelo aumento de carga (peso) nesse mesmo exercício. Sendo assim, o rendimento é calculado da seguinte forma:
+    1 - Aumento do rendimento:
+        * Aumento de carga para um número mínimo de 4 repetições
+        * Aumento no número de repetições para a mesma carga
+    2 - Redução do rendimento:
+        * Redução de carga para realizar o mesmo número de repetições, ou menos, que a sessão anterior
+        * Redução no número de repetições para a mesma carga
+
+Com esse rastreio, é esperado que o usuário tenha um maior controle dos seus treinos e, com isso,
+consiga realizar uma melhor progressão de carga. 
+
+Descrição das funcionalidades do App
+
+1 - Armazenamento dos treinos, exercícios e dados do exercício: para cada usuário, o app deve ser capaz de armazenar os treinos 
+de musculação. Os treinos são compostos de exercícios e cada exercício deve possuir um par (repetições, peso). O app deve ser capaz
+de armazenar todos esses dados.
+
+2 - Exibição dos dados de um treino específico: quando um usuário solicitar os dados de um treino qualquer, o sistema deve mostrar os
+exercícios e os dados desse exercício a baixo, ou seja, deverá ser renderizado um card com o nome do treino e, abaixo, os exercícios
+desse treino e, logo abaixo de cada exercício, a carga realizada na última série do exercício e o número de repetições com essa carga.
+
+3 - Exibição de gráficos: o usuário pode informar um exercício específico feito anteriormente, independente se foi com um treino diferente,
+e exibir um gráfico de barras, o qual no eixoX será a ocorrência do exercício e, no eixoY, será o "esforço" feito pelo usuário.

@@ -1,0 +1,10 @@
+Regras de negócio
+    RN01 - Aumento de Rendimento: Considera-se aumento de rendimento se a variação do peso > 0  
+    com repetições >=4, ou se a variação de repetições > 0 para a mesma carga.
+
+    RN02 - Redução de Rendimento: Considera-se diminuição de rendimento se a variação do peso < 0  
+    com o mesmo número de repetições da sessão anterior (ou menos), ou se a variação de repetições < 0 para a 
+    mesma carga.
+
+    RN03 - Esforço: o Esforço será calculado seguindo a fórmula base de Volume de Carga Total(V) ->
+    V = peso * repetições

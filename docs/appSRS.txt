@@ -1,0 +1,78 @@
+Especificação dos Requisitos de Software
+
+Requisitos Funcionais:
+    RF01 - O sistema deve permitir o cadastro de novos treinos, compostos por uma sequencia de exercícios
+
+    RF02 - O sistema deve permitir o cadastro de sessões de treino, junto com os dados dos exercícios realizados
+    como carga e repetições
+
+    RF03 - O sistema deve permitir a remoção de treinos, sem apagar os dados dos exercícios do usuário
+
+    RF04 - O sistema deve permitir a criação de gráficos de Esforço X Tempo para cada exercício já realizado pelo usuário
+
+    RF05 - O sistema deve ser capaz de mostrar os dados da última sessão de determinado treino realizado
+
+    RF06 - O sistema deve ser capaz de mostrar o treino a ser realizado a partir do dia da semana
+
+Requisitos Não Funcionais:
+    RNF01 - O sistema deve utilizar o Firebase
+    
+    RNF02 - O sistema deve ser codificado em Python com Streamlit
+
+
+
+Especificação de BDD:
+    RF01 - Cenário 1: Sucesso
+        Dado que o usuário está na tela de cadastro de treino
+        Quando ele selecionar o dia da semana que será realizado esse treino E especificar os exercícios a serem realizados
+        Então o sistema deve salvar esse treino
+    
+    RF02 - Cenário 1: Sucesso
+        Dado que o usuário possui um treino cadastrado E estiver na tela de cadastro de sessão de treino
+        Quando o usuário cadastrar a sessão
+        Então o sistema deve salvar essa sessão E os dados dos exercícios cadastrados
+         Cenário 2: Falha
+        Dado que o usuário não possui treinos cadastrados
+        Quando o usuário tentar cadastrar uma sessão
+        Então o sistema não deve mostrar a opção de cadastrar sessão de treino
+    
+    RF03 - Cenário 1: Sucesso
+        Dado que o usuário possui um treino cadastrado E estiver na tela de gerência de treinos
+        Quando o usuário selecionar para remover determinado treino
+        Então o sistema deve remover o treino do banco de dados, mantendo os dados dos exercícios realizados
+    
+    RF04 - Cenário 1: Sucesso
+        Dado que o usuário já realizou uma sessão de treino e cadastrou os dados de um determinado exercício
+        Quando o usuário tentar gerar um gráfico contendo os dados desse exercício
+        Então o sistema deve gerar um gráfico de barras verticais com o eixoX sendo as sessões realizadas, iniciando em 1, 
+        e o eixoY sendo o esforço realizado
+         Cenário 2: Falha
+        Dado que o usuário não cadastrou sessões de treino 
+        Quando o usuário tentar gerar um gráfico para um exercício
+        Então o sistema não deve permitir gerar esse gráfico
+    
+    RF05 - Cenário 1: Sucesso
+        Dado que o usuário possui treinos cadastrados
+        Quando o usuário estiver na tela principal do app
+        Então o sistema deve mostrar, logo abaixo de cada exercício, as repetições e a carga realizada na última sessão desse treino
+         Cenário 2: Falha
+        Dado que o usuário não possui nenhuma sessão cadastrada para determinado treino
+        Quando o usuário estiver na tela principal do app
+        Então o sistema deve mostrar apenas os exercícios desse treino
+         Cenário 3: Falha
+        Dado que o usuário não possui treinos cadastrados
+        Quando o usuário estiver na tela principal do app
+        Então o sistema deve mostrar uma mensagem indicando o usuário a criar um treino
+
+    RF06 - Cenário 1: Sucesso
+        Dado que o usuário possui treinos cadastrados E o dia atual possui treino cadastrado
+        Quando o usuário estiver na tela principal do app
+        Então o sistema deve mostrar o treino a ser realizado com as informações da última sessão, se houver
+         Cenário 2: Sucesso 
+        Dado que o usuário possui treinos cadastrados E o dia atual não possui treino cadastrado
+        Quando o usuário estiver na tela principal do app
+        Então o sistema deve mostrar uma mensagem amigável de que o dia é de descanso
+         Cenário 3: Falha
+        Dado que o usuário não possui treinos cadastrados
+        Quando o usuário estiver na tela principal do app
+        Então o sistema deve mostrar uma mensagem indicando o usuário a criar um treino

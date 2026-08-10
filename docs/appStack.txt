@@ -1,0 +1,11 @@
+Stack de tecnologias do app
+
+    Linguagem principal: Python
+    Framework "frontend": Streamlit
+    Banco de dados: Firebase
+
+    Essa stack é pre-requisito do projeto. Como o app em si deve ser um projeto simples, a arquitetura será monolítica com 
+    Cliente-Servidor e MVC, isto é, os serviços de conexão com o banco de dados e as regras de negócio estarão separados 
+    em uma pasta de backend que será dividida em Models, Views e Controllers. Para o "frontend" do projeto, o Streamlit fará
+    as telas e as chamadas ao backend do sistema, se responsabilizando apenas pela validação das entradas e saídas.
+
