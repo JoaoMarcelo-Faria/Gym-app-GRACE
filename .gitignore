@@ -38,3 +38,6 @@ Desktop.ini
 # IDEs
 .vscode/
 .idea/
+
+# Database
+backend/firebase_credentials.json
