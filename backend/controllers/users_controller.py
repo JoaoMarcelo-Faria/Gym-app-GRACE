@@ -6,7 +6,7 @@ class UserController:
         self.db = db_client
         self.collection = self.db.collection('User')
 
-    def create_user(self, user: users.User):
+    def create_user(self, user: users.UserModel):
         # Firestore gera uma referência com um ID aleatório
         new_doc_ref = self.collection.document()
         # Atribui o ID gerado ao objeto User
@@ -17,11 +17,11 @@ class UserController:
         return user
     
 
-    def get_user(self, user_id: str) -> users.User:
+    def get_user_by_id(self, user_id: str) -> users.UserModel:
         user_ref = self.collection.document(user_id)
         user_doc = user_ref.get()
 
         if user_doc.exists:
-            return users.User.from_dict()
+            return users.UserModel.from_dict(user_doc.to_dict())
         else:
             return None
