@@ -1,4 +1,4 @@
 streamlit
 streamlit-lottie
-google-cloud-firestore
+firebase-admin
 streamlit-option-menu
