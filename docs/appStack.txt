@@ -9,3 +9,23 @@ Stack de tecnologias do app
     em uma pasta de backend que será dividida em Models, Views e Controllers. Para o "frontend" do projeto, o Streamlit fará
     as telas e as chamadas ao backend do sistema, se responsabilizando apenas pela validação das entradas e saídas.
 
+Estrutura de pastas e arquivos do projeto
+GraceApp/
+|- app.py       -> Tela inicial para identificação do usuário, posteriormente pode virar tela de autenticação
+|- pages/
+   |- home.py       -> Home Screen do app. Deve conter uma mensagem de boas vindas, mostrar o treino quando houver e possuir duas opções de botão para ver os gráficos ou editar/criar os treinos
+   |- analytics_view.py     -> Tela de gráficos do app. Deve possuir um seletor de exercício para gerar o gráfico e um seletor de período (ex: ultimos 3 meses ou 6 meses)
+   |- workouts_view.py      -> Tela de análise dos treinos. Deve possuir 7 botões que representam o dia da semana (um sempre estará selecionado) e, logo abaixo, mostrar o treino desse dia. Embaixo do treino deve mostrar a opção de deletar treino, editar treino ou criar novo treino.
+|- docs/        -> documentação completa do sistema
+|- backend/
+   |- controllers/
+      |- metrics_controller     -> contem a lógica e regras de negócio para gerar as métricas necessárias dos gráficos
+      |- session_controller     -> contem a lógica e regras de negócio para gerenciar as sessões de treino dos usuários
+      |- users_controller       -> contem a lógica de criação de usuários. por enquanto não é utilizada
+      |- workout_controller     -> contem a lógica e regras de negócio da gerência dos exercícios e treinos
+   |- models/
+      |- exercise.py            -> contem o model/schema da entidade Exercise
+      |- session.py             -> contem os models/schemas das entidades Workout Session e Exercise Session
+      |- users.py               -> contem o model/schema do usuário
+      |- workout.py             -> contem os model/schema da entidade Workout
+   |- database.py               -> contem a lógica de conexão com o banco de dados do firebase 
