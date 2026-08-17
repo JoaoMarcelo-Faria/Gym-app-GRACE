@@ -9,7 +9,7 @@ st.set_page_config(page_title="Home", page_icon="🏠")
 def load_home_page(user_id: str):
     ## Mensagem de Boas-Vindas
     st.title("Olá João, pronto para o treino de hoje?")
-    st.write("Aqui está o seu plano de treino:")
+    st.subheader("Aqui está o seu plano de treino:")
 
     ## Descobre o dia da semana atual
     weekdays = ["Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado", "Domingo"]
@@ -29,8 +29,9 @@ def load_home_page(user_id: str):
         else:
             # Cenário: Tem treino hoje
             st.subheader(f"💪 {today_workout.get('Name')}")
-            st.caption(f"Dia da semana: {today_name}")
-            st.divider() # Linha divisória dentro do card
+            st.text(f"Dia da semana: {today_name}")
+            # st.divider() # Linha divisória dentro do card
+            st.text("")
             
             # Lista os exercícios dentro do card
             exercises = today_workout.get('Order', [])

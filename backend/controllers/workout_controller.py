@@ -46,7 +46,13 @@ class WorkoutController():
         existing_docs = self.db.collection("Exercise").where("User_id", "==", data.user_id).where("Name", "in", exercise_names).stream()
         existing_names = {doc.to_dict().get("Name"): doc.id for doc in existing_docs}       # Permite a busca em O(1)
         exs_list = []
+        seen_exercises = set()
+
         for exercise in data.order:
+            if exercise.name in seen_exercises:
+                raise ValueError(f"Não é possível adicionar exercícios duplicados em um treino.")
+            seen_exercises.add(exercise.name)
+            
             if exercise.name in existing_names:
                 exercise.id = existing_names[exercise.name]     # coloca o id do exercicio "antigo" no "novo" exercicio
             else:
@@ -132,7 +138,6 @@ class WorkoutController():
         if not exist_workout.exists:
             raise IndexError("Não existe treino com esse id")
 
-        data = new_workout.to_dict()
         ## Validar as novas entradas
         # weekday
         used_weekday = self.collection.where("Weekday", "==", new_workout.weekday).where("User_id", "==", new_workout.user_id).limit(1).get()
@@ -144,7 +149,30 @@ class WorkoutController():
         if len(used_name) != 0 and used_name[0].id != workout_id:
             raise ValueError("Já existe um treino cadastrado com esse nome")
 
+        ## Tudo está validado
+        # Atualização de exercícios novos e antigos
+        if len(new_workout.order) != len(exist_workout.to_dict().get("Order")):
+            exercise_names = [ex.name for ex in new_workout.order]
+            existing_docs = self.db.collection("Exercise").where("User_id", "==", new_workout.user_id).where("Name", "in", exercise_names).stream()
+            existing_names = {doc.to_dict().get("Name"): doc.id for doc in existing_docs}       # Permite a busca em O(1)
+            exs_list = []
+            seen_exercises = set()
+
+            for exercise in new_workout.order:
+                if exercise.name in seen_exercises:     # Valida a duplicidade de exercícios no mesmo treino
+                    raise ValueError(f"O exercício {exercise.name} já está neste treino.")
+                seen_exercises.add(exercise.name)
+
+                if exercise.name in existing_names:
+                    exercise.id = existing_names[exercise.name]     # coloca o id do exercicio "antigo" no "novo" exercicio
+                else:
+                    self.exercise_controller.create_exercise(exercise)
+
+                exs_list.append(exercise)
+            new_workout.order = exs_list
+
         ## Se chegou aqui, está tudo validado e pode ser alterado no banco
+        data = new_workout.to_dict()
         self.collection.document(workout_id).update(data)
 
         return new_workout

@@ -1,6 +1,6 @@
 class ExerciseModel():
     def __init__(self, id: str, name: str, user_id:str):
-        self.name = name
+        self.name = name.strip().capitalize() if name else name
         self.id = id
         self.user_id = user_id
 

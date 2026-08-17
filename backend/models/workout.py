@@ -11,7 +11,7 @@ class WorkoutModel():
             exs_order: list[ExerciseModel]
         ):
         self.id = id
-        self.name = Name
+        self.name = Name.strip().capitalize() if Name else Name
         self.weekday = Weekday
         self.user_id = user_id
         self.order = exs_order
