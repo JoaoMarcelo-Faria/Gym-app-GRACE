@@ -157,7 +157,7 @@ def edit_workout_form(workout_controller: WorkoutController, user_id: str):
             
             try:
                 # Dispara a requisição de update
-                workout_controller.update_workout(workout_id, updated_workout)
+                workout_controller.update_workout(workout_id, updated_workout, user_id)
                 st.success("Treino atualizado com sucesso!")
                 
                 # Limpa TODA a sujeira da sessão e recarrega a tela principal
