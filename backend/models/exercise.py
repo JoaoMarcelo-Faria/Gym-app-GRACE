@@ -18,3 +18,5 @@ class ExerciseModel():
             name=data.get("Name"),
             user_id=data.get("User_id")
         )
+
+## TODO: Refatorar esse model para usar dataclass
