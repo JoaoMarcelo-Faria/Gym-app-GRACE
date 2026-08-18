@@ -107,7 +107,7 @@ def load_workout_screen():
                         if workout_id:
                             try:
                                 # Chama o controller criado anteriormente (RF03)
-                                workout_controller.delete_workout(workout_id)
+                                workout_controller.delete_workout(workout_id, user_id)
                                 st.success(f"Treino '{selected_workout.get('Name')}' deletado com sucesso!")
                                 # Força a tela a recarregar para mostrar o dia vazio
                                 st.rerun() 

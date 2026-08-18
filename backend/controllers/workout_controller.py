@@ -123,20 +123,30 @@ class WorkoutController():
 
         return response
 
-    def delete_workout(self, workout_id: str):
+    def delete_workout(self, workout_id: str, user_id: str):
         ## Checar se o id existe no banco
         exist_workout = self.collection.document(workout_id).get()
         if not exist_workout.exists:
             raise IndexError("Não existe treino com esse id")
+
+        ## Checagem do id do usuário para não permitir a remoção de treinos que não sejam dele
+        workout_data = exist_workout.to_dict()
+        if workout_data.get("User_id") != user_id:
+            raise PermissionError("Usuário não coincide com o id permitido")
 
         self.collection.document(workout_id).delete()
         return True
 
-    def update_workout(self, workout_id: str, new_workout: WorkoutModel):
+    def update_workout(self, workout_id: str, new_workout: WorkoutModel, user_id: str):
         ## Checar se o id existe no banco
         exist_workout = self.collection.document(workout_id).get()
         if not exist_workout.exists:
             raise IndexError("Não existe treino com esse id")
+
+        ## Checagem do id do usuário para não permitir a alteração de treinos que não sejam dele
+        workout_data = exist_workout.to_dict()
+        if workout_data.get("User_id") != user_id:
+            raise PermissionError("Usuário não coincide com o id permitido")
 
         ## Validar as novas entradas
         # weekday
