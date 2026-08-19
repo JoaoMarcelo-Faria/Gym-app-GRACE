@@ -24,8 +24,15 @@ def load_home_page(user_id: str):
     with st.container(border=True):
         if today_workout is None:
             # Cenário: Dia de Descanso
-            st.subheader("🎉 Dia de descanso!")
+            st.subheader("Nenhum treino cadastrado")
             st.write(f"Você não tem nenhum treino cadastrado para **{today_name}**.")
+            st.write("Clique no botão abaixo para cadastrar um treino para hoje.")
+        
+        elif today_workout.get("Name") == "Descanso":
+            # Cenário: Dia de Descanso
+            st.subheader("🎉 Dia de descanso!")
+            st.write(f"Hoje não tem treino. Certifique-se de descansar, ingerir bastante água e dormir 8 horas.")
+        
         else:
             # Cenário: Tem treino hoje
             st.subheader(f"💪 {today_workout.get('Name')}")
@@ -49,9 +56,11 @@ def load_home_page(user_id: str):
     ## BOTÕES DE NAVEGAÇÃO
     col1, col2 = st.columns(2)
     with col1:
-        st.page_link("pages/analytics_view.py", label="📊 Ver Gráficos", use_container_width=True)
+        if st.button("📊 Ver Gráficos", use_container_width=True):
+            st.switch_page("pages/analytics_view.py")
     with col2:
-        st.page_link("pages/workouts_view.py", label="⚙️ Editar/Criar Treinos", use_container_width=True)
+        if st.button("⚙️ Editar/Criar Treinos", use_container_width=True):
+            st.switch_page("pages/workouts_view.py")
 
 
 def main():

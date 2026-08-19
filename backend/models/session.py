@@ -12,7 +12,7 @@ class ExerciseSessionModel():
 
     def __post_init__(self):
         # Garantindo a regra de negócio do cálculo de Esforço
-        self.effort = self.weight * self.reps
+        self.Effort = self.Weight * self.Reps
     
     def to_dict(self):
         return {
@@ -32,7 +32,6 @@ class ExerciseSessionModel():
             Exercise_id=data.get("Exercise_id"),
             Reps=data.get("Reps"),
             Weight=data.get("Weight"),
-            Effort=data.get("Effort"),
             id=data.get("id"),
             User_id=data.get("User_id")
         )
