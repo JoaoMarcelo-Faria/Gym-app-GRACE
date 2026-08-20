@@ -87,10 +87,10 @@ def load_home_page(user_id: str):
     ## BOTÕES DE NAVEGAÇÃO
     col1, col2 = st.columns(2)
     with col1:
-        if st.button("📊 Ver Gráficos", use_container_width=True):
+        if st.button("📊 Ver Gráficos", width='stretch'):
             st.switch_page("pages/analytics_view.py")
     with col2:
-        if st.button("⚙️ Editar/Criar Treinos", use_container_width=True):
+        if st.button("⚙️ Editar/Criar Treinos", width='stretch'):
             st.switch_page("pages/workouts_view.py")
 
 

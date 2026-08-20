@@ -23,7 +23,7 @@ def update_global_states(action: str, day: str, workout: dict = None):
     st.rerun()
 
 def render_cancel_button():
-    if st.button("❌ Cancelar Operação", use_container_width=True):
+    if st.button("❌ Cancelar Operação", width='stretch'):
         st.session_state.pop("current_action", None)
         st.session_state.pop("action_day", None)
         st.session_state.pop("temp_exercises", None)
@@ -34,15 +34,15 @@ def render_empty_days(day: str, workout_controller: WorkoutController, user_id: 
     if not is_rest_day:
         col1, col2 = st.columns(2)
         with col1:
-            if st.button("➕ Criar Novo Treino", type="primary", use_container_width=True):
+            if st.button("➕ Criar Novo Treino", type="primary", width='stretch'):
                 update_global_states("create", day)
         with col2:
-            if st.button("😴 Cadastrar Descanso", use_container_width=True):
+            if st.button("😴 Cadastrar Descanso", width='stretch'):
                 workout_controller.create_rest_day(day, user_id)
                 st.success("Dia de descanso cadastrado com sucesso!")
                 st.rerun()
     else:
-        if st.button("➕ Criar Novo Treino", type="primary", use_container_width=True):
+        if st.button("➕ Criar Novo Treino", type="primary", width='stretch'):
             update_global_states("create", day)
 
 
@@ -145,19 +145,19 @@ def load_workout_screen():
                 col1, col2 = st.columns(2)
                 with col1:
                     ## Botão de cadastrar uma sessão de treino
-                    if st.button("Cadastrar sessão de treino", use_container_width=True, type="primary"):
+                    if st.button("Cadastrar sessão de treino", width='stretch', type="primary"):
                         update_global_states("create_session", weekdays_menu, selected_workout)
 
                     
-                    if st.button("✏️ Editar Treino", use_container_width=True):
+                    if st.button("✏️ Editar Treino", width='stretch'):
                         update_global_states("edit", weekdays_menu, selected_workout)
                 
                 with col2:
-                    if st.button("Editar sessões de treino", use_container_width=True):
+                    if st.button("Editar sessões de treino", width='stretch'):
                         update_global_states("edit_session", weekdays_menu, selected_workout)
 
                     # O botão de deletar executa a ação imediatamente e recarrega a tela
-                    if st.button("🗑️ Deletar Treino", use_container_width=True):
+                    if st.button("🗑️ Deletar Treino", width='stretch'):
                         workout_id = selected_workout.get('id')
                         if workout_id:
                             try:

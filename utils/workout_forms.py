@@ -31,7 +31,7 @@ def create_workout_form(weekday: str, workout_controller: WorkoutController, use
         # Dá um alinhamento visual para o botão ficar ao lado do input
         st.write("") 
         st.write("")
-        if st.button("Adicionar à lista", use_container_width=True):
+        if st.button("Adicionar à lista", width='stretch'):
             if new_ex_name and new_ex_name not in st.session_state.get("temp_exercises"):
                 # Salva o nome na lista temporária e recarrega a tela
                 st.session_state["temp_exercises"].append(new_ex_name)
@@ -41,7 +41,7 @@ def create_workout_form(weekday: str, workout_controller: WorkoutController, use
                 st.warning("Digite um nome para o exercício.")
     st.divider()
     ## Botão final para salvar o treino completo no banco
-    if st.button("Finalizar e Salvar Treino", type="primary", use_container_width=True):
+    if st.button("Finalizar e Salvar Treino", type="primary", width='stretch'):
         if not name:
             st.error("O treino precisa de um nome!")
         elif len(st.session_state["temp_exercises"]) == 0:
@@ -122,7 +122,7 @@ def edit_workout_form(workout_controller: WorkoutController, user_id: str):
     with col2:
         st.write("") 
         st.write("")
-        if st.button("Adicionar à lista", key="add_ex_edit_btn", use_container_width=True):
+        if st.button("Adicionar à lista", key="add_ex_edit_btn", width='stretch'):
             if new_ex_name and new_ex_name not in st.session_state["temp_exercises"]:
                 st.session_state["temp_exercises"].append(new_ex_name)
                 st.session_state["input_key_edit_counter"] += 1
@@ -133,7 +133,7 @@ def edit_workout_form(workout_controller: WorkoutController, user_id: str):
     st.divider()
     
     # SALVAR ALTERAÇÕES
-    if st.button("Salvar Alterações", type="primary", use_container_width=True):
+    if st.button("Salvar Alterações", type="primary", width='stretch'):
         if not name:
             # Mantem o mesmo nome se não enviar outro
             name = workout_data.get("Name")

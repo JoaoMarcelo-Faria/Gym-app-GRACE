@@ -20,8 +20,12 @@ de musculação. Os treinos são compostos de exercícios e cada exercício deve
 de armazenar todos esses dados.
 
 2 - Exibição dos dados de um treino específico: quando um usuário solicitar os dados de um treino qualquer, o sistema deve mostrar os
-exercícios e os dados desse exercício a baixo, ou seja, deverá ser renderizado um card com o nome do treino e, abaixo, os exercícios
+exercícios e os dados desse exercício abaixo, ou seja, deverá ser renderizado um card com o nome do treino e, abaixo, os exercícios
 desse treino e, logo abaixo de cada exercício, a carga realizada na última série do exercício e o número de repetições com essa carga.
 
-3 - Exibição de gráficos: o usuário pode informar um exercício específico feito anteriormente, independente se foi com um treino diferente,
-e exibir um gráfico de barras, o qual no eixoX será a ocorrência do exercício e, no eixoY, será o "esforço" feito pelo usuário.
+3 - Exibição de gráficos: quando um usuário entrar na tela de gráficos, deve aparecer um seletor dos exercícios vinculados a ele. Assim 
+que ele selecionar um dos exercícios, deve ser analisado se ele tem uma sessão de treino desse exercício para gerar o gráfico. Caso ele 
+não tenha essa seção, o programa deve exibir uma mensagem amigável para ele cadastrar uma sessão antes de gerar um gráfico. Caso ele 
+tenha uma seção, o gráfico deve ser gerado. O eixoY do gráfico deve ser o esforço feito pelo usuário e o eixoX deve ser os dias que ele 
+fez as sessões. O eixoY deve iniciar no 0, enquanto que o eixoX deve dar um espaço para iniciar com o primeiro dia de sessão. O gráfico
+gerado deve ser um gráfico de barras. No futuro, deve ser considerado a funcionalidade de selecionar o período do gráfico.

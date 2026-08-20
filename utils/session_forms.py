@@ -38,7 +38,7 @@ def create_session_form(session_controller: SessionController, user_id: str, dat
                 "reps_key": reps_key
             })
             st.write("")        ## Espaçamento
-        submit_btn = st.form_submit_button("Salvar Sessão", type="primary", use_container_width=True)
+        submit_btn = st.form_submit_button("Salvar Sessão", type="primary", width='stretch')
 
         if submit_btn:
             try:
@@ -114,7 +114,7 @@ def edit_session_form(workout_data: dict, session_controller: SessionController,
 
         st.divider()
         # Dá a opção de apagar essa sessão de treino
-        if st.button("🗑️ Deletar Sessão", use_container_width=True):
+        if st.button("🗑️ Deletar Sessão", width='stretch'):
             try:
                 session_controller.delete_session(session_id, user_id)
                 st.success(f"Sessão deletada com sucesso!")
@@ -157,7 +157,7 @@ def edit_session_form(workout_data: dict, session_controller: SessionController,
                 })
                 st.write("")
 
-            submit_btn = st.form_submit_button("💾 Salvar Alterações", type="primary", use_container_width=True)
+            submit_btn = st.form_submit_button("💾 Salvar Alterações", type="primary", width='stretch')
 
             if submit_btn:
                 try:
