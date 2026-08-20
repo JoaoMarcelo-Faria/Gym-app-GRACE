@@ -16,6 +16,34 @@ if not st.session_state["autenticado"] or "autenticado" not in st.session_state:
     st.error("Usuário não autenticado. Cancelando a execução")
     st.stop()
 
+def update_global_states(action: str, day: str, workout: dict = None):
+    if workout: st.session_state["workout_to_session"] = workout
+    if action: st.session_state["current_action"] = action
+    if day: st.session_state["action_day"] = day
+    st.rerun()
+
+def render_cancel_button():
+    if st.button("❌ Cancelar Operação", use_container_width=True):
+        st.session_state.pop("current_action", None)
+        st.session_state.pop("action_day", None)
+        st.session_state.pop("temp_exercises", None)
+        st.rerun()
+
+def render_empty_days(day: str, workout_controller: WorkoutController, user_id: str, is_rest_day: bool):
+    st.write("O que você gostaria de fazer?")
+    if not is_rest_day:
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button("➕ Criar Novo Treino", type="primary", use_container_width=True):
+                update_global_states("create", day)
+        with col2:
+            if st.button("😴 Cadastrar Descanso", use_container_width=True):
+                workout_controller.create_rest_day(day, user_id)
+                st.success("Dia de descanso cadastrado com sucesso!")
+                st.rerun()
+    else:
+        if st.button("➕ Criar Novo Treino", type="primary", use_container_width=True):
+            update_global_states("create", day)
 
 
 def load_workout_screen():
@@ -52,52 +80,38 @@ def load_workout_screen():
 
     ## Exibir o Treino e Ações (Card)
     with st.container(border=True):
-        if selected_workout is None:
-            # Caso não haja treino no dia
-            st.subheader(f"Nenhum treino para {weekdays_menu}")
+        current_action = st.session_state.get("current_action")
+        action_day = st.session_state.get("action_day")
 
-            if st.session_state.get("current_action") == "create" and st.session_state.get("action_day") == weekdays_menu:
-                create_workout_form(weekdays_menu, workout_controller, user_id)
-                
-                # Botão opcional para cancelar a criação e fechar o form
-                if st.button("❌ Cancelar", use_container_width=True):
-                    del st.session_state["temp_exercises"]
-                    if "current_action" in st.session_state: del st.session_state["current_action"]
-                    st.rerun()
+        ## Fluxo de criação de treino
+        if st.session_state.get("current_action") == "create" and st.session_state.get("action_day") == weekdays_menu:
+            create_workout_form(weekdays_menu, workout_controller, user_id)
+            render_cancel_button()
+
+        ## Fluxo de dia vazio ou de descanso
+        elif selected_workout is None or selected_workout.get("Name") == "Descanso":
+            if selected_workout is None:
+                st.subheader(f"Nenhum treino para {weekdays_menu}")
+                render_empty_days(weekdays_menu, workout_controller, user_id, False)
             else:
-                st.write("O que você gostaria de fazer?")
-                # Botão de Criar Novo
-                if st.button("Criar Novo Treino", type="primary", use_container_width=True):
-                    # Guarda no session_state qual dia o usuário quer criar
-                    st.session_state["action_day"] = weekdays_menu
-                    st.session_state["current_action"] = "create"
-                    st.rerun()
+                st.subheader("🎉 Hoje é dia de descanso!")
+                st.text("Certifique-se de beber bastante água e dormir por 8 horas.")
+                render_empty_days(weekdays_menu, workout_controller, user_id, True)
 
-                if st.button("Cadastrar dia de descanso", use_container_width=True):
-                    workout_controller.create_rest_day(weekdays_menu, user_id)
-                    st.success("Dia de descanso cadastrado com sucesso")
-                    st.rerun()
-    
-        elif selected_workout.get("Name") == "Descanso":
-            st.subheader("Hoje é dia de descanso!")
-            st.text("Certifique-se de beber bastante água e dormir por 8 horas.")
+        ## Fluxo dos formulários específicos
+        elif current_action == "edit" and action_day == weekdays_menu:
+            edit_workout_form(workout_controller, user_id)
+            render_cancel_button()
 
-            if st.session_state.get("current_action") == "create" and st.session_state.get("action_day") == weekdays_menu:
-                create_workout_form(weekdays_menu, workout_controller, user_id)
-                
-                # Botão opcional para cancelar a criação e fechar o form
-                if st.button("❌ Cancelar", use_container_width=True):
-                    del st.session_state["temp_exercises"]
-                    if "current_action" in st.session_state: del st.session_state["current_action"]
-                    st.rerun()
-            else:
-                st.write("O que você gostaria de fazer?")
-                # Botão de Criar Novo
-                if st.button("Criar Novo Treino", type="primary", use_container_width=True):
-                    # Guarda no session_state qual dia o usuário quer criar
-                    st.session_state["action_day"] = weekdays_menu
-                    st.session_state["current_action"] = "create"
-                    st.rerun()
+        elif current_action == "create_session" and action_day == weekdays_menu:
+            create_session_form(session_controller, user_id, selected_workout)
+            render_cancel_button()
+
+        elif current_action == "edit_session" and action_day == weekdays_menu:
+            edit_session_form(selected_workout, session_controller, user_id)
+            render_cancel_button()
+
+
         else:
             # Caso haja treino cadastrado
             st.subheader(f"💪 {selected_workout.get('Name')}")
@@ -113,32 +127,18 @@ def load_workout_screen():
             st.write("") # Espaçamento
             if st.session_state.get("current_action") == "edit" and st.session_state.get("action_day") == weekdays_menu:
                 edit_workout_form(workout_controller, user_id)
-
-                # Botão opcional para cancelar a criação e fechar o form
-                if st.button("❌ Cancelar", use_container_width=True):
-                    del st.session_state["temp_exercises"]
-                    if "current_action" in st.session_state: del st.session_state["current_action"]
-                    st.rerun()
+                render_cancel_button()
 
 
                     
             elif st.session_state.get("current_action") == "create_session" and st.session_state.get("action_day") == weekdays_menu:
                 create_session_form(session_controller, user_id, selected_workout)
-
-
-                # Botão opcional para cancelar a criação e fechar o form
-                if st.button("❌ Cancelar", use_container_width=True):
-                    if "current_action" in st.session_state: del st.session_state["current_action"]
-                    st.rerun()
+                render_cancel_button()
 
 
             elif st.session_state.get("current_action") == "edit_session" and st.session_state.get("action_day") == weekdays_menu:
                 edit_session_form(selected_workout, session_controller, user_id)
-
-                # Botão opcional para cancelar a criação e fechar o form
-                if st.button("❌ Cancelar", use_container_width=True):
-                    if "current_action" in st.session_state: del st.session_state["current_action"]
-                    st.rerun()
+                render_cancel_button()
 
             else:
                 ## Botões de Ação para Treino Existente (Editar e Deletar)
@@ -146,24 +146,16 @@ def load_workout_screen():
                 with col1:
                     ## Botão de cadastrar uma sessão de treino
                     if st.button("Cadastrar sessão de treino", use_container_width=True, type="primary"):
-                        st.session_state["workout_to_session"] = selected_workout
-                        st.session_state["current_action"] = "create_session"
-                        st.session_state["action_day"] = weekdays_menu
-                        st.rerun()
+                        update_global_states("create_session", weekdays_menu, selected_workout)
 
                     
                     if st.button("✏️ Editar Treino", use_container_width=True):
-                        st.session_state["workout_to_edit"] = selected_workout
-                        st.session_state["current_action"] = "edit"
-                        st.session_state["action_day"] = weekdays_menu
-                        st.rerun()
+                        update_global_states("edit", weekdays_menu, selected_workout)
                 
                 with col2:
                     if st.button("Editar sessões de treino", use_container_width=True):
-                        st.session_state["workout_to_session"] = selected_workout
-                        st.session_state["current_action"] = "edit_session"
-                        st.session_state["action_day"] = weekdays_menu
-                        st.rerun()
+                        update_global_states("edit_session", weekdays_menu, selected_workout)
+
                     # O botão de deletar executa a ação imediatamente e recarrega a tela
                     if st.button("🗑️ Deletar Treino", use_container_width=True):
                         workout_id = selected_workout.get('id')

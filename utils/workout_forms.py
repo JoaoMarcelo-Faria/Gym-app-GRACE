@@ -79,7 +79,7 @@ def create_workout_form(weekday: str, workout_controller: WorkoutController, use
 
 def edit_workout_form(workout_controller: WorkoutController, user_id: str):
     # Recupera o dicionário do treino que foi salvo no botão "Editar"
-    workout_data = st.session_state.get("workout_to_edit")
+    workout_data = st.session_state.get("workout_to_session")
     if not workout_data:
         st.error("Erro: Nenhum treino selecionado para edição.")
         return
