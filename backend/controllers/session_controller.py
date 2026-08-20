@@ -105,11 +105,7 @@ class SessionController():
 
 
     def get_last_session(self, workout_id: str, user_id: str):
-        # Validar a existência de um treino 
-        workout = self.db.collection("Workout").document(workout_id).get()
-        if not workout.exists:
-            raise ValueError("O treino solicitado não existe")
-
+        # Não há necessidade de validação de treino pois se não houver, o retorno será vazio e tratado no frontend
         data = self.collection.where("Workout_id", "==", workout_id).where("User_id", "==", user_id).order_by("Occurency_date", direction=firestore.Query.DESCENDING).limit(1).get()
         if len(data) == 0:
             return None

@@ -1,11 +1,16 @@
+from datetime import datetime
+
 import streamlit as st
+
 from backend.database import db
 from backend.controllers.users_controller import UserController
 from backend.controllers.workout_controller import WorkoutController
 from backend.controllers.session_controller import SessionController
-from datetime import datetime
-# Configuração opcional para deixar a página mais amigável
-st.set_page_config(page_title="Home", page_icon="🏠")
+
+
+WEEKDAYS = ["Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado", "Domingo"]
+
+
 
 def load_home_page(user_id: str):
     ## Mensagem de Boas-Vindas
@@ -13,9 +18,8 @@ def load_home_page(user_id: str):
     st.subheader("Aqui está o seu plano de treino:")
 
     ## Descobre o dia da semana atual
-    weekdays = ["Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado", "Domingo"]
     today_index = datetime.today().weekday()
-    today_name = weekdays[today_index]
+    today_name = WEEKDAYS[today_index]
 
     ## Busca o treino no banco de dados
     workout_controller = WorkoutController(db)
@@ -48,7 +52,7 @@ def load_home_page(user_id: str):
             # Verificar se já foi feita uma sessão hoje
             already_done_today = False
             today_str = datetime.today().strftime("%Y-%m-%d")
-            if last_session_data and last_session_data.get("Occurency_Date") == today_str:
+            if last_session_data and last_session_data.get("Occurency_date") == today_str:
                 already_done_today = True
             # Exibição Condicional de Conclusão
             if already_done_today:
@@ -57,12 +61,12 @@ def load_home_page(user_id: str):
 
             
             # Mapear os exercícios da ultima sessão
-            history_map = {}
-            last_date_str = ""
-            if last_session_data:
-                last_date_str = last_session_data.get('Occurency_date')
-                for ex_sess in last_session_data.get("Data_session", []):
-                    history_map[ex_sess.get("Exercise_id")] = ex_sess
+            history_map = {
+                ex_sess.get("Exercise_id"): ex_sess 
+                for ex_sess in last_session_data.get("Data_session", [])
+            } if last_session_data else {}
+
+            last_date_str = last_session_data.get('Occurency_date')
             
             # Lista os exercícios dentro do card
             exercises = today_workout.get('Order', [])
@@ -106,8 +110,11 @@ def main():
             st.stop()
 
     ## Inicializar o usuário único do sistema
-    master_user = UserController(db).get_user_by_id(st.secrets["MASTER_USER_ID"])
-    st.session_state["User"] = master_user.to_dict()
+    if "User" not in st.session_state:
+        master_user = UserController(db).get_user_by_id(st.secrets["MASTER_USER_ID"])
+        if master_user:
+            st.session_state["User"] = master_user.to_dict()
+    
     load_home_page(user_id)
 
 if __name__ == "__main__":

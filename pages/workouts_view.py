@@ -1,18 +1,19 @@
 from datetime import datetime
+import streamlit as st
+from streamlit_option_menu import option_menu
+
 from backend.controllers.workout_controller import WorkoutController
 from backend.controllers.session_controller import SessionController
 from backend.models.workout import WorkoutModel
 from backend.models.exercise import ExerciseModel
 from backend.database import db
-import streamlit as st
-from streamlit_option_menu import option_menu
 from utils.workout_forms import create_workout_form, edit_workout_form
 from utils.session_forms import create_session_form, edit_session_form
 
 
 
 ## Checa se o usuário está autenticado
-if not st.session_state["autenticado"] or "autenticado" not in st.session_state:
+if not st.session_state.get("autenticado"):
     st.error("Usuário não autenticado. Cancelando a execução")
     st.stop()
 
@@ -125,51 +126,36 @@ def load_workout_screen():
                 st.write("Sem exercícios cadastrados.")
             
             st.write("") # Espaçamento
-            if st.session_state.get("current_action") == "edit" and st.session_state.get("action_day") == weekdays_menu:
-                edit_workout_form(workout_controller, user_id)
-                render_cancel_button()
 
+            ## Botões de Ação para Treino Existente (Editar e Deletar)
+            col1, col2 = st.columns(2)
+            with col1:
+                ## Botão de cadastrar uma sessão de treino
+                if st.button("Cadastrar sessão de treino", width='stretch', type="primary"):
+                    update_global_states("create_session", weekdays_menu, selected_workout)
 
-                    
-            elif st.session_state.get("current_action") == "create_session" and st.session_state.get("action_day") == weekdays_menu:
-                create_session_form(session_controller, user_id, selected_workout)
-                render_cancel_button()
-
-
-            elif st.session_state.get("current_action") == "edit_session" and st.session_state.get("action_day") == weekdays_menu:
-                edit_session_form(selected_workout, session_controller, user_id)
-                render_cancel_button()
-
-            else:
-                ## Botões de Ação para Treino Existente (Editar e Deletar)
-                col1, col2 = st.columns(2)
-                with col1:
-                    ## Botão de cadastrar uma sessão de treino
-                    if st.button("Cadastrar sessão de treino", width='stretch', type="primary"):
-                        update_global_states("create_session", weekdays_menu, selected_workout)
-
-                    
-                    if st.button("✏️ Editar Treino", width='stretch'):
-                        update_global_states("edit", weekdays_menu, selected_workout)
                 
-                with col2:
-                    if st.button("Editar sessões de treino", width='stretch'):
-                        update_global_states("edit_session", weekdays_menu, selected_workout)
+                if st.button("✏️ Editar Treino", width='stretch'):
+                    update_global_states("edit", weekdays_menu, selected_workout)
+            
+            with col2:
+                if st.button("Editar sessões de treino", width='stretch'):
+                    update_global_states("edit_session", weekdays_menu, selected_workout)
 
-                    # O botão de deletar executa a ação imediatamente e recarrega a tela
-                    if st.button("🗑️ Deletar Treino", width='stretch'):
-                        workout_id = selected_workout.get('id')
-                        if workout_id:
-                            try:
-                                # Chama o controller criado anteriormente (RF03)
-                                workout_controller.delete_workout(workout_id, user_id)
-                                st.success(f"Treino '{selected_workout.get('Name')}' deletado com sucesso!")
-                                # Força a tela a recarregar para mostrar o dia vazio
-                                st.rerun() 
-                            except Exception as e:
-                                st.error(f"Erro ao deletar: {e}")
-                        else:
-                            st.error("Não foi possível encontrar o ID do treino para deleção.")
+                # O botão de deletar executa a ação imediatamente e recarrega a tela
+                if st.button("🗑️ Deletar Treino", width='stretch'):
+                    workout_id = selected_workout.get('id')
+                    if workout_id:
+                        try:
+                            # Chama o controller criado anteriormente (RF03)
+                            workout_controller.delete_workout(workout_id, user_id)
+                            st.success(f"Treino '{selected_workout.get('Name')}' deletado com sucesso!")
+                            # Força a tela a recarregar para mostrar o dia vazio
+                            st.rerun() 
+                        except Exception as e:
+                            st.error(f"Erro ao deletar: {e}")
+                    else:
+                        st.error("Não foi possível encontrar o ID do treino para deleção.")
 
 
 

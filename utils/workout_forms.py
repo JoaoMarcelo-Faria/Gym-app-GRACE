@@ -67,9 +67,9 @@ def create_workout_form(weekday: str, workout_controller: WorkoutController, use
                 st.success("Treino salvo com sucesso!")
                 
                 # Limpa a memória temporária e sai do modo de criação
-                del st.session_state["temp_exercises"]
-                del st.session_state["current_action"]
-                del st.session_state["action_day"]
+                st.session_state.pop("temp_exercises",None)
+                st.session_state.pop("current_action",None)
+                st.session_state.pop("action_day",None)
                 st.rerun() # Atualiza a tela para mostrar o treino criado no Card
                 
             except Exception as e:
@@ -117,7 +117,7 @@ def edit_workout_form(workout_controller: WorkoutController, user_id: str):
     # ADIÇÃO DE NOVOS EXERCÍCIOS
     col1, col2 = st.columns([2, 1])
     with col1:
-        new_ex_name = st.text_input("Nome do novo exercício:", key=f"edit_new_ex_input_{st.session_state["input_key_edit_counter"]}")
+        new_ex_name = st.text_input("Nome do novo exercício:", key=f"edit_new_ex_input_{st.session_state['input_key_edit_counter']}")
         new_ex_name = new_ex_name.strip().capitalize()
     with col2:
         st.write("") 
@@ -160,11 +160,10 @@ def edit_workout_form(workout_controller: WorkoutController, user_id: str):
                 workout_controller.update_workout(workout_id, updated_workout, user_id)
                 st.success("Treino atualizado com sucesso!")
                 
-                # Limpa TODA a sujeira da sessão e recarrega a tela principal
-                del st.session_state["temp_exercises"]
-                del st.session_state["current_action"]
-                del st.session_state["workout_to_edit"]
-                del st.session_state["action_day"]
+                st.session_state.pop("temp_exercises",None)
+                st.session_state.pop("current_action",None)
+                st.session_state.pop("workout_to_session",None)
+                st.session_state.pop("action_day",None)
                 st.rerun()
                 
             except Exception as e:
