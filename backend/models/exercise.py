@@ -1,8 +1,12 @@
+from dataclasses import dataclass
+
+
+
+@dataclass
 class ExerciseModel():
-    def __init__(self, id: str, name: str, user_id:str):
-        self.name = name.strip().capitalize() if name else name
-        self.id = id
-        self.user_id = user_id
+    name: str
+    id: str
+    user_id: str
 
     def to_dict(self):
         return {
@@ -18,5 +22,3 @@ class ExerciseModel():
             name=data.get("Name"),
             user_id=data.get("User_id")
         )
-
-## TODO: Refatorar esse model para usar dataclass

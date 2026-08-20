@@ -1,20 +1,13 @@
 from backend.models.exercise import ExerciseModel
+from dataclasses import dataclass
 
-
+@dataclass
 class WorkoutModel():
-    def __init__(
-            self, 
-            Name: str, 
-            Weekday: str, 
-            id: str,
-            user_id: str,
-            exs_order: list[ExerciseModel]
-        ):
-        self.id = id
-        self.name = Name.strip().capitalize() if Name else Name
-        self.weekday = Weekday
-        self.user_id = user_id
-        self.order = exs_order
+    name: str
+    weekday: str
+    id: str
+    user_id: str
+    order: list[ExerciseModel]
 
     def to_dict(self):
         exs_list = []
@@ -45,5 +38,3 @@ class WorkoutModel():
             user_id=data.get("User_id"),
             exs_order=exs_list
         )
-
-## TODO: Refatorar esse model para usar dataclass

@@ -48,7 +48,7 @@ def load_home_page(user_id: str):
             # Verificar se já foi feita uma sessão hoje
             already_done_today = False
             today_str = datetime.today().strftime("%Y-%m-%d")
-            if last_session_data.get("Occurency_Date") == today_str:
+            if last_session_data and last_session_data.get("Occurency_Date") == today_str:
                 already_done_today = True
             # Exibição Condicional de Conclusão
             if already_done_today:
@@ -60,7 +60,7 @@ def load_home_page(user_id: str):
             history_map = {}
             last_date_str = ""
             if last_session_data:
-                last_date_str = last_session_data.get('Occurency_date', '')
+                last_date_str = last_session_data.get('Occurency_date')
                 for ex_sess in last_session_data.get("Data_session", []):
                     history_map[ex_sess.get("Exercise_id")] = ex_sess
             
