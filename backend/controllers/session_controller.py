@@ -82,7 +82,6 @@ class SessionController():
 
         # Se já ocorreu a criação de uma sessão no dia
         session_already = self.collection\
-            .where("Workout_id", "==", data.Workout_id)\
             .where("Occurency_date", "==", data.Occurency_date)\
             .where("User_id", "==", data.User_id).limit(1).get()
         if len(session_already) != 0:
@@ -116,6 +115,24 @@ class SessionController():
             return None
 
         return data[0].to_dict()
+
+    def get_sessions_by_workout(self, workout_id: str, user_id: str):
+        # Validar a existência de um treino 
+        workout = self.db.collection("Workout").document(workout_id).get()
+        if not workout.exists:
+            raise ValueError("O treino solicitado não existe")
+
+        # Busca todas as sessões de um treino específico para o usuário
+        sessions = self.collection \
+            .where("Workout_id", "==", workout_id) \
+            .where("User_id", "==", user_id) \
+            .order_by("Occurency_date", direction=firestore.Query.DESCENDING) \
+            .stream()
+        response = [session.to_dict() for session in sessions]
+        if len(response) == 0:
+            return None         # Se não houverem sessões cadastradas, não tem problema só não retorna nada
+
+        return response
 
     def delete_session(self, session_id: str, user_id: str):
         ## Verificações
