@@ -45,3 +45,5 @@ class WorkoutModel():
             user_id=data.get("User_id"),
             exs_order=exs_list
         )
+
+## TODO: Refatorar esse model para usar dataclass

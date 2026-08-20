@@ -1,11 +1,15 @@
 from datetime import datetime
 from backend.controllers.workout_controller import WorkoutController
+from backend.controllers.session_controller import SessionController
 from backend.models.workout import WorkoutModel
 from backend.models.exercise import ExerciseModel
 from backend.database import db
 import streamlit as st
 from streamlit_option_menu import option_menu
 from utils.workout_forms import create_workout_form, edit_workout_form
+from utils.session_forms import create_session_form, edit_session_form
+
+
 
 ## Checa se o usuário está autenticado
 if not st.session_state["autenticado"] or "autenticado" not in st.session_state:
@@ -41,9 +45,10 @@ def load_workout_screen():
 
     st.divider()        # Formatar a pagina
 
-    ## Buscar o treino do dia selecionado
+    ## controllers a serem usados
     workout_controller = WorkoutController(db)
     selected_workout = workout_controller.get_workouts_by_date(weekdays_menu, user_id)
+    session_controller = SessionController(db)
 
     ## Exibir o Treino e Ações (Card)
     with st.container(border=True):
@@ -67,7 +72,8 @@ def load_workout_screen():
                     st.session_state["action_day"] = weekdays_menu
                     st.session_state["current_action"] = "create"
                     st.rerun()
-                    
+
+                ## TODO: Criar o botão de colocar esse dia como dia de descanso
         else:
             # Caso haja treino cadastrado
             st.subheader(f"💪 {selected_workout.get('Name')}")
@@ -89,11 +95,39 @@ def load_workout_screen():
                     del st.session_state["temp_exercises"]
                     if "current_action" in st.session_state: del st.session_state["current_action"]
                     st.rerun()
-            
+
+
+                    
+            elif st.session_state.get("current_action") == "create_session" and st.session_state.get("action_day") == weekdays_menu:
+                create_session_form(session_controller, user_id, selected_workout)
+
+
+                # Botão opcional para cancelar a criação e fechar o form
+                if st.button("❌ Cancelar", use_container_width=True):
+                    if "current_action" in st.session_state: del st.session_state["current_action"]
+                    st.rerun()
+
+
+            elif st.session_state.get("current_action") == "edit_session" and st.session_state.get("action_day") == weekdays_menu:
+                edit_session_form(selected_workout, session_controller, user_id)
+
+                # Botão opcional para cancelar a criação e fechar o form
+                if st.button("❌ Cancelar", use_container_width=True):
+                    if "current_action" in st.session_state: del st.session_state["current_action"]
+                    st.rerun()
+
             else:
                 ## Botões de Ação para Treino Existente (Editar e Deletar)
                 col1, col2 = st.columns(2)
                 with col1:
+                    ## Botão de cadastrar uma sessão de treino
+                    if st.button("Cadastrar sessão de treino", use_container_width=True, type="primary"):
+                        st.session_state["workout_to_session"] = selected_workout
+                        st.session_state["current_action"] = "create_session"
+                        st.session_state["action_day"] = weekdays_menu
+                        st.rerun()
+
+                    
                     if st.button("✏️ Editar Treino", use_container_width=True):
                         st.session_state["workout_to_edit"] = selected_workout
                         st.session_state["current_action"] = "edit"
@@ -101,6 +135,11 @@ def load_workout_screen():
                         st.rerun()
                 
                 with col2:
+                    if st.button("Editar sessões de treino", use_container_width=True):
+                        st.session_state["workout_to_session"] = selected_workout
+                        st.session_state["current_action"] = "edit_session"
+                        st.session_state["action_day"] = weekdays_menu
+                        st.rerun()
                     # O botão de deletar executa a ação imediatamente e recarrega a tela
                     if st.button("🗑️ Deletar Treino", use_container_width=True):
                         workout_id = selected_workout.get('id')
@@ -115,6 +154,9 @@ def load_workout_screen():
                                 st.error(f"Erro ao deletar: {e}")
                         else:
                             st.error("Não foi possível encontrar o ID do treino para deleção.")
+
+
+
 
     # Botão para voltar à Home de forma nativa
     st.write("")
