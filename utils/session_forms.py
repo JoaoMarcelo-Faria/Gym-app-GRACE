@@ -119,6 +119,7 @@ def edit_session_form(workout_data: dict, session_controller: SessionController,
                 session_controller.delete_session(session_id, user_id)
                 st.success(f"Sessão deletada com sucesso!")
                 # Força a tela a recarregar para mostrar o dia vazio
+                st.session_state.pop("current_action", None)
                 st.rerun() 
             except Exception as e:
                 st.error(f"Erro ao deletar: {e}")
@@ -189,7 +190,7 @@ def edit_session_form(workout_data: dict, session_controller: SessionController,
                     st.success(f"Sessão do dia {selected_date} atualizada com sucesso! 🎉")
                     
                     # Limpa a memória para voltar à tela principal e recarrega
-                    if "current_action" in st.session_state: del st.session_state["current_action"]
+                    if "current_action" in st.session_state: st.session_state.pop("current_action", None)
                     st.rerun()
 
                 except Exception as e:

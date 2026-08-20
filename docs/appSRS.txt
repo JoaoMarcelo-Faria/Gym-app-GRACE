@@ -14,6 +14,14 @@ Requisitos Funcionais:
 
     RF06 - O sistema deve ser capaz de mostrar o treino a ser realizado a partir do dia da semana
 
+    RF07 - O sistema deve permitir a edição de treinos, sem interferir nos dados dos exercícios
+
+    RF08 - O sistema deve permitir a edição de sessões de treino
+
+    RF09 - O sistema deve permitir a remoção de sessões de treinos
+
+    RF10 - O sistema deve permitir o cadastro de dias de descanso
+
 Requisitos Não Funcionais:
     RNF01 - O sistema deve utilizar o Firebase
     
@@ -76,3 +84,35 @@ Especificação de BDD:
         Dado que o usuário não possui treinos cadastrados
         Quando o usuário estiver na tela principal do app
         Então o sistema deve mostrar uma mensagem indicando o usuário a criar um treino
+
+    RF07 - Cenário 1: Sucesso
+        Dado que o usuário possui um treino cadastrado
+        Quando o usuário desejar editar esse treino
+        Então o sistema deve exibir um formulário de edição de treinos e salvar os novos dados no banco de dados
+          Cenário 2: Falha
+        Dado que o usuário não possui treinos cadastrados
+        Quando o usuário estiver na tela de visualização de treinos
+        Então o sistema não deve oferecer a possibilidade de editar um treino
+    
+    RF08 - Cenário 1: Sucesso
+        Dado que o usuário possui uma sessão cadastrada para um treino
+        Quando o usuário desejar editar essa sessão
+        Então o sistema deve exibir um formulário de edição de sessões e salvar os novos dados no banco de dados
+          Cenário 2: Falha
+        Dado que o usuário não possui sessões cadastradas
+        Quando o usuário selecionar a opção de editar uma sessão de determinado treino
+        Então o sistema deve exibir uma mensagem amigável informando que ele não tem acesso a essa operação
+    
+    RF09 - Cenário 1: Sucesso
+        Dado que o usuário possui uma sessão cadastrada para um treino
+        Quando o usuário desejar excluir essa sessão
+        Então o sistema deve exibir essa opção na tela de edição de sessões e apagar as sessões dos exercícios junto com a sessão
+    
+    RF10 - Cenário 1: Sucesso
+        Dado que o usuário possui um dia sem treino cadastrado
+        Quando o usuário desejar cadastrar esse dia como dia de descanso
+        Então o sistema deve exibir essa opção na tela de visualização de treinos e oferecer apenas a opção de criar treino nesse dia
+          Cenário 2: Sucesso
+        Dado que o usuário possui um treino cadastrado em determinado dia
+        Quando o usuário desejar cadastrar esse dia como dia de descanso
+        Então o usuário deve remover o treino desse dia e cadastrar ele como dia de descanso
