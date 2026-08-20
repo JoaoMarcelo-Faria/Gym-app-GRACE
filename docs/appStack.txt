@@ -19,13 +19,15 @@ GraceApp/
 |- docs/        -> documentação completa do sistema
 |- backend/
    |- controllers/
-      |- metrics_controller     -> contem a lógica e regras de negócio para gerar as métricas necessárias dos gráficos
-      |- session_controller     -> contem a lógica e regras de negócio para gerenciar as sessões de treino dos usuários
-      |- users_controller       -> contem a lógica de criação de usuários. por enquanto não é utilizada
-      |- workout_controller     -> contem a lógica e regras de negócio da gerência dos exercícios e treinos
+      |- session_controller.py     -> contem a lógica e regras de negócio para gerenciar as sessões de treino dos usuários
+      |- users_controller.py       -> contem a lógica de criação de usuários. por enquanto não é utilizada
+      |- workout_controller.py     -> contem a lógica e regras de negócio da gerência dos exercícios e treinos
    |- models/
       |- exercise.py            -> contem o model/schema da entidade Exercise
       |- session.py             -> contem os models/schemas das entidades Workout Session e Exercise Session
       |- users.py               -> contem o model/schema do usuário
       |- workout.py             -> contem os model/schema da entidade Workout
    |- database.py               -> contem a lógica de conexão com o banco de dados do firebase 
+| - utils/
+   | - session_forms.py          -> contem o formulário de criação e edição de sessões de treino
+   | - workout_forms.py          -> contem o formulário de criação e edição de treinos
