@@ -73,7 +73,31 @@ def load_workout_screen():
                     st.session_state["current_action"] = "create"
                     st.rerun()
 
-                ## TODO: Criar o botão de colocar esse dia como dia de descanso
+                if st.button("Cadastrar dia de descanso", use_container_width=True):
+                    workout_controller.create_rest_day(weekdays_menu, user_id)
+                    st.success("Dia de descanso cadastrado com sucesso")
+                    st.rerun()
+    
+        elif selected_workout.get("Name") == "Descanso":
+            st.subheader("Hoje é dia de descanso!")
+            st.text("Certifique-se de beber bastante água e dormir por 8 horas.")
+
+            if st.session_state.get("current_action") == "create" and st.session_state.get("action_day") == weekdays_menu:
+                create_workout_form(weekdays_menu, workout_controller, user_id)
+                
+                # Botão opcional para cancelar a criação e fechar o form
+                if st.button("❌ Cancelar", use_container_width=True):
+                    del st.session_state["temp_exercises"]
+                    if "current_action" in st.session_state: del st.session_state["current_action"]
+                    st.rerun()
+            else:
+                st.write("O que você gostaria de fazer?")
+                # Botão de Criar Novo
+                if st.button("Criar Novo Treino", type="primary", use_container_width=True):
+                    # Guarda no session_state qual dia o usuário quer criar
+                    st.session_state["action_day"] = weekdays_menu
+                    st.session_state["current_action"] = "create"
+                    st.rerun()
         else:
             # Caso haja treino cadastrado
             st.subheader(f"💪 {selected_workout.get('Name')}")
