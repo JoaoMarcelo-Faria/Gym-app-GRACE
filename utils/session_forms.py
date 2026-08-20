@@ -14,7 +14,7 @@ def create_session_form(session_controller: SessionController, user_id: str, dat
     session_date_str = session_date.strftime("%Y-%m-%d")
 
     st.write("")        ## Espaçamento
-    st.markdown("###Preencha seu desempenho em cada exercício:")
+    st.markdown("##### Preencha seu desempenho em cada exercício:")
 
     with st.form(key=f"form_session_{date_workout.get('id')}"):
         input_keys = []     # Lista para salvar os dados a serem salvos no bd

@@ -69,6 +69,9 @@ def load_workout_screen():
          default_index=today_index,
          orientation="horizontal",
          menu_icon=":calendar:",
+         styles={
+             "container": {"paddding": "5px", "background-color": "#0a0a0f", "border": "1px solid #ff6b00"}
+         },
          icons=[":one:", ":two:", ":three:", ":four:", ":five:", ":six:", ":seven:"]
     )
 
