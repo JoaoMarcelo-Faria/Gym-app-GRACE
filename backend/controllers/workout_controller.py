@@ -63,19 +63,46 @@ class WorkoutController():
 
         ## Checar se já tem um treino nesse dia da semana
         used_weekday = self.collection.where("Weekday", "==", data.weekday).where("User_id", "==", data.user_id).limit(1).get()
-        if len(used_weekday) != 0:
+        if len(used_weekday) != 0 and used_weekday[0].to_dict().get("Name") != "Descanso":
             raise ValueError("Já existe um treino cadastrado nesse dia")
 
-        ## Checar se já tem um treino com o mesmo nome
+        ## Checar se já tem um treino com o mesmo nome e não é um dia de decanso
         used_name = self.collection.where("Name", "==", data.name).where("User_id", "==", data.user_id).limit(1).get()
         if len(used_name) != 0:
             raise ValueError("Já existe um treino cadastrado com esse nome")
 
+        ## Checar se é um dia de descanso
+        if used_weekday[0].to_dict().get("Name") == "Descanso":
+            rest_day_id = used_weekday[0].to_dict().get("id")
+            self.delete_workout(rest_day_id, data.user_id)
+        
         new_doc_ref = self.collection.document()
         data.id = new_doc_ref.id
         new_doc_ref.set(data.to_dict())
 
         return data
+
+    def create_rest_day(self, weekday: str, user_id: str):
+        ## Validações 
+        # Se tem um treino cadastrado nesse dia
+        used_weekday = self.collection.where("Weekday", "==", weekday).where("User_id", "==", user_id).limit(1).get()
+        if len(used_weekday) != 0:
+            raise ValueError("Já existe um treino cadastrado nesse dia")
+
+        ## Definir o nome e os exercícios
+        new_doc_ref = self.collection.document()
+        new_id = new_doc_ref.id
+        rest_day = WorkoutModel(
+            Name="Descanso",
+            id=new_id,
+            exs_order=[],
+            user_id=user_id,
+            Weekday=weekday
+        )
+        new_doc_ref.set(rest_day.to_dict())
+
+        return rest_day
+        
 
     def get_used_weekdays(self, user_id: str):
         ## Checar se existe o id de usuário no banco
