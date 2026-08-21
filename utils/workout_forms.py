@@ -57,8 +57,8 @@ def create_workout_form(weekday: str, workout_controller: WorkoutController, use
                 Name=name,
                 Weekday=weekday,
                 id="",
-                user_id=user_id,
-                exs_order=exercises_list
+                User_id=user_id,
+                Order=exercises_list
             )
             
             try:
@@ -151,8 +151,8 @@ def edit_workout_form(workout_controller: WorkoutController, user_id: str):
                 Name=name,
                 Weekday=weekday,
                 id=workout_id,
-                user_id=user_id,
-                exs_order=exercises_list
+                User_id=user_id,
+                Order=exercises_list
             )
             
             try:
