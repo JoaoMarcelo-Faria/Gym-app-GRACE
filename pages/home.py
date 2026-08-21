@@ -15,7 +15,7 @@ WEEKDAYS = ["Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Se
 
 def load_home_page(user_id: str):
     ## Mensagem de Boas-Vindas
-    st.title("Olá João, pronto para o treino de hoje?")
+    st.title(f"Olá {st.session_state["logged_user"].get("Name")}, tudo pronto para o treino de hoje?")
     st.subheader("Aqui está o seu plano de treino:")
 
     ## Definir o fuso horário no Brasil

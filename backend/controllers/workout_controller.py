@@ -203,11 +203,11 @@ class WorkoutController():
 
         for exercise in new_workout.Order:
             if exercise.name in seen_exercises:     # Valida a duplicidade de exercícios no mesmo treino
-                raise ValueError(f"O exercício {exercise.Name} já está neste treino.")
-            seen_exercises.add(exercise.Name)
+                raise ValueError(f"O exercício {exercise.name} já está neste treino.")
+            seen_exercises.add(exercise.name)
 
             if exercise.name in existing_names:
-                exercise.id = existing_names[exercise.Name]     # coloca o id do exercicio "antigo" no "novo" exercicio
+                exercise.id = existing_names[exercise.name]     # coloca o id do exercicio "antigo" no "novo" exercicio
             else:
                 self.exercise_controller.create_exercise(exercise)
 
