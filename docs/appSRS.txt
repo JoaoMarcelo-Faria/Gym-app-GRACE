@@ -27,6 +27,10 @@ Requisitos Não Funcionais:
     
     RNF02 - O sistema deve ser codificado em Python com Streamlit
 
+    RNF03 - O sistema deve criptografar as senhas dos usuários
+
+    RNF04 - O sistema deve fazer uma verificação para não permitir senhas fracas
+
 
 
 Especificação de BDD:
