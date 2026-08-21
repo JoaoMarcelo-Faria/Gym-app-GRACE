@@ -15,7 +15,7 @@ WEEKDAYS = ["Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Se
 
 def load_home_page(user_id: str):
     ## Mensagem de Boas-Vindas
-    st.title("Olá João, pronto para o treino de hoje?")
+    st.title(f"Olá {st.session_state["logged_user"].get("Name")}, tudo pronto para o treino de hoje?")
     st.subheader("Aqui está o seu plano de treino:")
 
     ## Definir o fuso horário no Brasil
@@ -104,23 +104,12 @@ def load_home_page(user_id: str):
 
 
 def main():
-    # Recupera o ID do usuário (Tenta pegar da sessão, se não achar, puxa do secrets)
-    user_id = st.session_state.get("User_id")
-    if not user_id:
-        try:
-            user_id = st.secrets["MASTER_USER_ID"]
-            st.session_state["User_id"] = user_id
-        except KeyError:
-            st.error("Erro: Usuário não autenticado e MASTER_USER_ID não encontrado no secrets.toml.")
-            st.stop()
-
-    ## Inicializar o usuário único do sistema
-    if "User" not in st.session_state:
-        master_user = UserController(db).get_user_by_id(st.secrets["MASTER_USER_ID"])
-        if master_user:
-            st.session_state["User"] = master_user.to_dict()
+    ## Checa se o usuário está autenticado
+    if not st.session_state.get("autenticado"):
+        st.error("Usuário não autenticado. Cancelando a execução.")
+        st.stop()
     
-    load_home_page(user_id)
+    load_home_page(st.session_state.get("User_id"))
 
 if __name__ == "__main__":
     main()

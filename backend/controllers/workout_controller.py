@@ -41,16 +41,16 @@ class WorkoutController():
         self.exercise_controller = ExerciseController(db_client)
 
     def create_workout(self, data: WorkoutModel):
-        exercise_names = [ex.name for ex in data.order]     # pega todos os nomes dos exercícios a serem criados
+        exercise_names = [ex.name for ex in data.Order]     # pega todos os nomes dos exercícios a serem criados
         existing_names = {}
         if exercise_names:
             # Faz uma chamada a API do google para complexidade O(1)
-            existing_docs = self.db.collection("Exercise").where("User_id", "==", data.user_id).where("Name", "in", exercise_names).stream()
+            existing_docs = self.db.collection("Exercise").where("User_id", "==", data.User_id).where("Name", "in", exercise_names).stream()
             existing_names = {doc.to_dict().get("Name"): doc.id for doc in existing_docs}       # Permite a busca em O(1)
         exs_list = []
         seen_exercises = set()
 
-        for exercise in data.order:
+        for exercise in data.Order:
             if exercise.name in seen_exercises:
                 raise ValueError(f"Não é possível adicionar exercícios duplicados em um treino.")
             seen_exercises.add(exercise.name)
@@ -61,22 +61,22 @@ class WorkoutController():
                 self.exercise_controller.create_exercise(exercise)
 
             exs_list.append(exercise)
-        data.order = exs_list
+        data.Order = exs_list
 
         ## Checar se já tem um treino nesse dia da semana
-        used_weekday = self.collection.where("Weekday", "==", data.weekday).where("User_id", "==", data.user_id).limit(1).get()
+        used_weekday = self.collection.where("Weekday", "==", data.Weekday).where("User_id", "==", data.User_id).limit(1).get()
         if len(used_weekday) != 0:
             ## Checar se é um dia de descanso
             if used_weekday[0].to_dict().get("Name") == "Descanso":
                 rest_day_id = used_weekday[0].to_dict().get("id")
-                self.delete_workout(rest_day_id, data.user_id)
+                self.delete_workout(rest_day_id, data.User_id)
 
             ## Se for um treino normal bloqueia
             else:
                 raise ValueError("Já existe um treino cadastrado nesse dia")
 
         ## Checar se já tem um treino com o mesmo nome e não é um dia de decanso
-        used_name = self.collection.where("Name", "==", data.name).where("User_id", "==", data.user_id).limit(1).get()
+        used_name = self.collection.where("Name", "==", data.Name).where("User_id", "==", data.User_id).limit(1).get()
         if len(used_name) != 0:
             raise ValueError("Já existe um treino cadastrado com esse nome")
 
@@ -100,8 +100,8 @@ class WorkoutController():
         rest_day = WorkoutModel(
             Name="Descanso",
             id=new_id,
-            exs_order=[],
-            user_id=user_id,
+            Order=[],
+            User_id=user_id,
             Weekday=weekday
         )
         new_doc_ref.set(rest_day.to_dict())
@@ -182,26 +182,26 @@ class WorkoutController():
 
         ## Validar as novas entradas
         # weekday
-        used_weekday = self.collection.where("Weekday", "==", new_workout.weekday).where("User_id", "==", new_workout.user_id).limit(1).get()
+        used_weekday = self.collection.where("Weekday", "==", new_workout.Weekday).where("User_id", "==", new_workout.User_id).limit(1).get()
         if len(used_weekday) != 0 and used_weekday[0].id != workout_id:
             raise ValueError("Já existe um treino cadastrado nesse dia")
         
         # nome
-        used_name = self.collection.where("Name", "==", new_workout.name).where("User_id", "==", new_workout.user_id).limit(1).get()
+        used_name = self.collection.where("Name", "==", new_workout.Name).where("User_id", "==", new_workout.User_id).limit(1).get()
         if len(used_name) != 0 and used_name[0].id != workout_id:
             raise ValueError("Já existe um treino cadastrado com esse nome")
 
         ## Tudo está validado
         # Atualização de exercícios novos e antigos
-        exercise_names = [ex.name for ex in new_workout.order]
+        exercise_names = [ex.name for ex in new_workout.Order]
         existing_names = {}
         if exercise_names:      ## Protege a query do parametro IN
-            existing_docs = self.db.collection("Exercise").where("User_id", "==", new_workout.user_id).where("Name", "in", exercise_names).stream()
+            existing_docs = self.db.collection("Exercise").where("User_id", "==", new_workout.User_id).where("Name", "in", exercise_names).stream()
             existing_names = {doc.to_dict().get("Name"): doc.id for doc in existing_docs}       # Permite a busca em O(1)
         exs_list = []
         seen_exercises = set()
 
-        for exercise in new_workout.order:
+        for exercise in new_workout.Order:
             if exercise.name in seen_exercises:     # Valida a duplicidade de exercícios no mesmo treino
                 raise ValueError(f"O exercício {exercise.name} já está neste treino.")
             seen_exercises.add(exercise.name)
@@ -212,7 +212,7 @@ class WorkoutController():
                 self.exercise_controller.create_exercise(exercise)
 
             exs_list.append(exercise)
-        new_workout.order = exs_list
+        new_workout.Order = exs_list
 
         ## Se chegou aqui, está tudo validado e pode ser alterado no banco
         data = new_workout.to_dict()

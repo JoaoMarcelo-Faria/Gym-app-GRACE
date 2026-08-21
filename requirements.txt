@@ -2,3 +2,4 @@ streamlit
 streamlit-lottie
 firebase-admin
 streamlit-option-menu
+pwdlib[argon2]

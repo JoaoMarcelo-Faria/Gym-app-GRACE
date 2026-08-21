@@ -3,23 +3,23 @@ from dataclasses import dataclass
 
 @dataclass
 class WorkoutModel():
-    name: str
-    weekday: str
+    Name: str
+    Weekday: str
     id: str
-    user_id: str
-    order: list[ExerciseModel]
+    User_id: str
+    Order: list[ExerciseModel]
 
     def to_dict(self):
         exs_list = []
-        if self.order:
-            for exercise in self.order:
+        if self.Order:
+            for exercise in self.Order:
                 exs_list.append(exercise.to_dict())
         
         return {
             "id": self.id,
-            "Name": self.name,
-            "Weekday": self.weekday,
-            "User_id": self.user_id,
+            "Name": self.Name,
+            "Weekday": self.Weekday,
+            "User_id": self.User_id,
             "Order": exs_list
         }
 
@@ -35,6 +35,6 @@ class WorkoutModel():
             Name=data.get("Name"),
             Weekday=data.get("Weekday"),
             id=data.get("id"),
-            user_id=data.get("User_id"),
-            exs_order=exs_list
+            User_id=data.get("User_id"),
+            Order=exs_list
         )

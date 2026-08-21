@@ -55,6 +55,8 @@ def load_analytics_screen():
         except Exception:
             # Captura a ausência de sessões e exibe a mensagem amigável solicitada
             st.info(f"Você ainda não registrou nenhuma sessão para o exercício **{exercises_dict[selected_ex_id]}**. Registre uma sessão no seu próximo treino para gerar o gráfico!")
+            if st.button("🔙 Voltar para a Home"):
+                st.switch_page("pages/home.py")
             st.stop()
            
                 

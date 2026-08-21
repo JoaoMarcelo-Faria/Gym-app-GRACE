@@ -1,20 +1,26 @@
-## Entidade User
+from dataclasses import dataclass
+
+
+@dataclass
 class UserModel():
-    def __init__(self, id: str, name: str):
-        self.id = id
-        self.name = name
+    id: str
+    name: str
+    username: str
+    password_hash: str
 
     def to_dict(self):
-        ## Transforma o objeto UserModel em um dicionário para o Firestore salvar no banco
         return {
             "id": self.id,
-            "name": self.name
+            "Name": self.name,
+            "Username": self.username,
+            "Password_hash": self.password_hash
         }
 
     def from_dict(src_dict: dict):
-        ## Transforma um dicionário do Firestore em um objeto UserModel
         return UserModel(
-            id=src_dict.get("id"),
-            name=src_dict.get("name")
+            id=src_dict.get("id", ""),
+            name=src_dict.get("Name", ""),
+            username=src_dict.get("Username", ""),
+            password_hash=src_dict.get("Password_hash", "")
         )
     
