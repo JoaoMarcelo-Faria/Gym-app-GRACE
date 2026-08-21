@@ -1,8 +1,11 @@
+from datetime import datetime
+import zoneinfo
+import streamlit as st
+
 from backend.controllers.session_controller import SessionController
 from backend.controllers.workout_controller import WorkoutController
 from backend.models.session import ExerciseSessionModel, SessionModel
-import datetime
-import streamlit as st
+
 
 
 
@@ -10,7 +13,9 @@ def create_session_form(session_controller: SessionController, user_id: str, dat
     st.subheader(f"Registrar sessão do treino {date_workout.get('Name')}")
 
     # Dá a liberdade do usuário passar a data mas limita até o dia de hoje
-    session_date = st.date_input("Data da sessão:", value=datetime.date.today(), max_value=datetime.date.today())
+    timezone_br = zoneinfo.ZoneInfo("America/Sao_Paulo")
+    today_br = datetime.now(timezone_br)
+    session_date = st.date_input("Data da sessão:", value=today_br.date(), max_value=today_br.date())
     session_date_str = session_date.strftime("%Y-%m-%d")
 
     st.write("")        ## Espaçamento

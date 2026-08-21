@@ -1,4 +1,5 @@
 from datetime import datetime
+import zoneinfo
 import streamlit as st
 from streamlit_option_menu import option_menu
 
@@ -62,7 +63,10 @@ def load_workout_screen():
     st.subheader("Selecione um dia da semana para ver, editar ou criar treinos.")
 
     ## Mostrar o menu de opções de dias da semana
-    today_index = datetime.today().weekday()
+    timezone_br = zoneinfo.ZoneInfo("America/Sao_Paulo")
+    today_br = datetime.now(timezone_br)
+
+    today_index = today_br.weekday()
     weekdays_menu = option_menu(
          menu_title= "Selecione o dia da semana para ver o exercício",
          options=["Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado", "Domingo"],
@@ -70,7 +74,7 @@ def load_workout_screen():
          orientation="horizontal",
          menu_icon=":calendar:",
          styles={
-             "container": {"paddding": "5px", "background-color": "#0a0a0f", "border": "1px solid #ff6b00"}
+             "container": {"background-color": "#0a0a0f", "border": "1px solid #ff6b00"}
          },
          icons=[":one:", ":two:", ":three:", ":four:", ":five:", ":six:", ":seven:"]
     )

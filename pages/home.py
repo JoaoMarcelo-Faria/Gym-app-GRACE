@@ -1,4 +1,5 @@
 from datetime import datetime
+import zoneinfo
 
 import streamlit as st
 
@@ -17,8 +18,12 @@ def load_home_page(user_id: str):
     st.title("Olá João, pronto para o treino de hoje?")
     st.subheader("Aqui está o seu plano de treino:")
 
+    ## Definir o fuso horário no Brasil
+    timezone_br = zoneinfo.ZoneInfo("America/Sao_Paulo")
+    today_br = datetime.now(timezone_br)
+    
     ## Descobre o dia da semana atual
-    today_index = datetime.today().weekday()
+    today_index = today_br.weekday()            
     today_name = WEEKDAYS[today_index]
 
     ## Busca o treino no banco de dados
@@ -51,7 +56,7 @@ def load_home_page(user_id: str):
 
             # Verificar se já foi feita uma sessão hoje
             already_done_today = False
-            today_str = datetime.today().strftime("%Y-%m-%d")
+            today_str = today_br.strftime("%Y-%m-%d")
             if last_session_data and last_session_data.get("Occurency_date") == today_str:
                 already_done_today = True
             # Exibição Condicional de Conclusão
@@ -66,7 +71,7 @@ def load_home_page(user_id: str):
                 for ex_sess in last_session_data.get("Data_session", [])
             } if last_session_data else {}
 
-            last_date_str = last_session_data.get('Occurency_date')
+            last_date_str = last_session_data.get('Occurency_date') if last_session_data else ""        ## fallback para caso não tenha últimas sessões
             
             # Lista os exercícios dentro do card
             exercises = today_workout.get('Order', [])
